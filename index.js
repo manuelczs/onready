@@ -1,5 +1,6 @@
 const sort = require('fast-sort');
 
+// Main class
 class Vehiculo {
   constructor(marca, modelo, precio) {
     this.marca = marca;
@@ -24,6 +25,7 @@ class Vehiculo {
   }
 }
 
+// Automovil class that extends the Vehiculo class
 class Automovil extends Vehiculo {
   constructor(marca, modelo, numPuertas, precio) {
     super(marca, modelo, precio);
@@ -31,13 +33,18 @@ class Automovil extends Vehiculo {
   }
 
   toString() {
+    var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
     return (
       `${super.toString()}` +
-      `Puertas: ${this.numPuertas} // Precio: $${this.precio}`
+      `Puertas: ${this.numPuertas} // Precio: ${formatter.format(this.precio)}`
     );
   }
 }
 
+// Motocicleta class that extends the Vehiculo class
 class Motocicleta extends Vehiculo {
   constructor(marca, modelo, cilindrada, precio) {
     super(marca, modelo, precio);
@@ -49,70 +56,105 @@ class Motocicleta extends Vehiculo {
   }
 
   toString() {
+    var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
     return (
       super.toString() +
-      `Cilindrada: ${this.cilindrada} // Precio: $${this.precio}`
+      `Cilindrada: ${this.cilindrada}c // Precio: ${formatter.format(
+        this.precio
+      )}`
     );
   }
 }
 
+// Auxiliar methods to sorting expensive and cheap values
 const sortByPrice = (vehicles, flag) => {
+  const copyVehicles = [...vehicles];
   if (flag) {
-    return sort(vehicles).asc((vehicle) => vehicle.precio);
+    return sort(copyVehicles).asc((vehicle) => vehicle.precio);
   }
-  return sort(vehicles).desc((vehicle) => vehicle.precio);
+  return sort(copyVehicles).desc((vehicle) => vehicle.precio);
 };
 
 const mostExpensive = (vehicles) => {
-  sorted_vehicles = sortByPrice(vehicles, false);
+  const _vehicles = [...vehicles];
+  sorted_vehicles = sortByPrice(_vehicles, false);
   return sorted_vehicles;
 };
 
 const mostCheap = (vehicles) => {
-  sorted_vehicles = sortByPrice(vehicles, true);
+  const _vehicles = [...vehicles];
+  sorted_vehicles = sortByPrice(_vehicles, true);
   return sorted_vehicles;
 };
 
 const containsY = (vehicles) => {
   for (let i = 0; i < vehicles.length; i++) {
-    if (vehicles[i].modelo.includes('Y')) {
+    if (vehicles[i].getModelo().includes('Y')) {
       return vehicles[i];
     }
-    return null;
   }
+  return null;
 };
 
 // Main printer
 const printLog = (vehicles) => {
-  const mostCheapVehicle = mostCheap(listOfVehicles)[0];
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  const _vehicles = [...vehicles];
+  const vehicles_ = [...vehicles];
+  const vehiclesSortedByDesc = sortByPrice(vehicles_);
+  const mostCheapVehicle = mostCheap(_vehicles)[0];
   const mostCheapMark = mostCheapVehicle.getMarca();
   const mostCheapModel = mostCheapVehicle.getModelo();
 
-  const mostExpensiveVehicle = mostExpensive(listOfVehicles)[0];
+  const mostExpensiveVehicle = mostExpensive(_vehicles)[0];
   const mostExpensiveMark = mostExpensiveVehicle.getMarca();
   const mostExpensiveModel = mostExpensiveVehicle.getModelo();
 
-  const containsYx = containsY(vehicles);
-  console.log(containsYx);
-  //  const containsYMark = containsYx.getMarca();
-  //const containsYModel = containsYx.getModelo();
-  // const containsYPrice = containsYx.getPrecio();
+  const withY = containsY(_vehicles);
+  const withYMark = withY.getMarca();
+  const withYModel = withY.getModelo();
+  const withYPrice = withY.getPrecio();
 
-  for (let i = 0; i < vehicles.length; i++) {
-    console.log(vehicles[i].toString());
+  for (let i = 0; i < _vehicles.length; i++) {
+    console.log(_vehicles[i].toString());
   }
   console.log('=============================');
 
   console.log(`Vehículo más caro: ${mostExpensiveMark} ${mostExpensiveModel}`);
   console.log(`Vehículo más barato: ${mostCheapMark} ${mostCheapModel}`);
-  console.log(`Vehículo que contiene en el modelo la letra 'Y': `);
+  console.log(
+    `Vehículo que contiene en el modelo la letra 'Y': ${withYMark} ${withYModel} ${formatter.format(
+      withYPrice
+    )}`
+  );
+  console.log('=============================');
+  console.log('Vehículos ordenados por precio de mayor a menor:');
+
+  for (let i = 0; i < vehiclesSortedByDesc.length; i++) {
+    console.log(
+      `${vehiclesSortedByDesc[i].getMarca()} ${vehiclesSortedByDesc[
+        i
+      ].getModelo()}`
+    );
+  }
 };
 
+// Here I create the instances
 const auto1 = new Automovil('Peugeot', '206', 4, 200000);
-const auto2 = new Motocicleta('Honda', 'Titan', '125c', 60000);
-const auto3 = new Automovil('Peugeot', '208', 5, 250000);
-const moto1 = new Motocicleta('Yamaha', 'YBR', '160c', 80500);
+const moto1 = new Motocicleta('Honda', 'Titan', 125, 60000);
+const auto2 = new Automovil('Peugeot', '208', 5, 250000);
+const moto2 = new Motocicleta('Yamaha', 'YBR', 160, 80500.5);
 
-const listOfVehicles = [auto1, auto2, auto3, moto1];
+// Set a list
+const listOfVehicles = [auto1, moto1, auto2, moto2];
 
+// And there we go!
 printLog(listOfVehicles);
