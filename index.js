@@ -1,3 +1,4 @@
+// Before running please use npm install command to add fast-sort library
 const sort = require('fast-sort');
 
 // Main class
@@ -97,7 +98,6 @@ const containsY = (vehicles) => {
       return vehicles[i];
     }
   }
-  return null;
 };
 
 // Main printer
@@ -147,13 +147,13 @@ const printLog = (vehicles) => {
   }
 };
 
-// Here I create the instances
+// Creating instances
 const auto1 = new Automovil('Peugeot', '206', 4, 200000);
 const moto1 = new Motocicleta('Honda', 'Titan', 125, 60000);
 const auto2 = new Automovil('Peugeot', '208', 5, 250000);
 const moto2 = new Motocicleta('Yamaha', 'YBR', 160, 80500.5);
 
-// Set a list
+// Set a list with that instances
 const listOfVehicles = [auto1, moto1, auto2, moto2];
 
 // And there we go!
